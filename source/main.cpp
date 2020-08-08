@@ -5,6 +5,7 @@
 	Description:
 		program main entry point
 */
+
 #define STB_IMAGE_IMPLEMENTATION
 
 #include "window/Display.hpp"

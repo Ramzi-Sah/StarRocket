@@ -2,7 +2,6 @@
 #define SR_CONFIG
 
 #include <iostream>
-#include <glm/glm.hpp>
 
 namespace Config {
     namespace Window {

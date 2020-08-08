@@ -17,8 +17,8 @@ public:
     static void imguiDebug();
     static void overlay(float deltaTime);
 
-    static void main();
-    static void main_connected_child();
+    static void leftPanel();
+    static void rightPanel();
 };
 
 #endif

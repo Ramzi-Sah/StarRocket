@@ -33,16 +33,15 @@ void GUI::update(float deltaTime) {
     ImGui::NewFrame();
 
     // windows
-    Windows::main();
+    Windows::leftPanel();
+    Windows::rightPanel();
 
+
+
+
+    // for debug
     Windows::imguiDebug();
     // Windows::overlay(deltaTime);
-
-
-
-
-
-
 
     // Render dear imgui into screen
     ImGui::Render();

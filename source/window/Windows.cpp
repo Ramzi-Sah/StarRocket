@@ -46,27 +46,22 @@ void Windows::overlay(float deltaTime) {
     };
 };
 
-void Windows::main() {
-    ImVec2 window_pos = ImVec2(0.0f, 0.0f);
-    ImVec2 window_pos_pivot = ImVec2(0.0f, 0.0f);
+void Windows::leftPanel() {
+    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(io->DisplaySize.x / 2 - 5, io->DisplaySize.y));
+    ImGui::Begin("leftPanel", NULL, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
 
-    ImGui::SetNextWindowPos(window_pos, ImGuiCond_Always, window_pos_pivot);
-    ImGui::SetNextWindowSize(ImVec2(io->DisplaySize.x, io->DisplaySize.y));
-    ImGui::Begin("main", NULL, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
-
-    ImGui::Text("%s V%.2f", Config::Window::title.c_str(), Config::Window::version);
-
-    main_connected_child();
+    ImGui::Text("test");
 
     ImGui::End();
-};
+}
 
-void Windows::main_connected_child() {
-    ImGui::BeginChild("main connected child", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.5f, 260), false, ImGuiWindowFlags_HorizontalScrollbar);
-    for (int i = 0; i < 100; i++)
-    {
-        ImGui::Text("%04d: scrollable region", i);
-    }
+void Windows::rightPanel() {
+    ImGui::SetNextWindowPos(ImVec2(io->DisplaySize.x / 2 + 5, 0.0f), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(io->DisplaySize.x / 2 - 5, io->DisplaySize.y));
+    ImGui::Begin("rightPanel", NULL, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
 
-    ImGui::EndChild();
+    ImGui::Text("test");
+
+    ImGui::End();
 }
