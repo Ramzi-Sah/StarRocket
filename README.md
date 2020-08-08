@@ -1,2 +1,2 @@
-# StarRocket
-Star Rocket control panel
+# Star Rocket Control panel
+latest version of the Star Rocket control panel
