@@ -48,20 +48,188 @@ void Windows::overlay(float deltaTime) {
 
 void Windows::leftPanel() {
     ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(io->DisplaySize.x / 2 - 5, io->DisplaySize.y));
+    ImGui::SetNextWindowSize(ImVec2(io->DisplaySize.x / 2 - 2, io->DisplaySize.y));
     ImGui::Begin("leftPanel", NULL, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
 
-    ImGui::Text("test");
+    //--------------------------------------------------------------------------
+    ImGui::Text("Star Rocket Management Panel");
+
+    // serial connection pannel
+    ImGui::BeginChild("serial connection", ImVec2(0, -1), true);
+
+    // title
+    ImGui::Text("Serial connection panel");
+    ImGui::Separator();
+
+    // connection status
+    ImGui::Text("serial connection status:");
+    ImGui::SameLine();
+    if (!Communication::getConnectedStatus())
+        ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "not connected");
+    else
+        ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "connected");
+
+    if (!Communication::getConnectedStatus()) {
+        // com ports
+        ImGui::Text("select com port :");
+        ImGui::SameLine();
+
+
+        // port info message
+        static unsigned int infoMessage = 0;
+
+        // scan ports button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.4f, 0.4f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.6f, 0.6f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.5f, 0.5f, 0.0f, 1.0f));
+        if (ImGui::Button("scan ports")) {
+            Communication::scanPorts();
+            infoMessage = 1;
+        };
+        ImGui::PopStyleColor(3);
+
+        ImGui::SameLine();
+        // get serial ports
+        static unsigned int selectedPort = 0;
+        const char* ports[selectedPort];
+        for (int i = 0; i < Communication::getPorts().size(); i ++)
+            ports[i] = Communication::getPorts()[i].port.c_str();
+        static ImGuiComboFlags flags = 0;
+        if (ImGui::BeginCombo("", ports[selectedPort], flags)) {
+            for (int n = 0; n < Communication::getPorts().size(); n++) {
+                bool is_selected = n == selectedPort;
+                if (ImGui::Selectable(ports[n], is_selected)) {
+                    selectedPort = n;
+                };
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            };
+            ImGui::EndCombo();
+        };
+
+        // connect to port button
+        if (Communication::getPorts().size() > 0) {
+
+            ImGui::Text("Commands: ");
+
+            ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.0f, 0.6f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.0f, 0.8f, 0.0f, 1.0f));
+            ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.0f, 0.5f, 0.0f, 1.0f));
+            if (ImGui::Button("connect to port")) {
+                Communication::setSelectedPort(selectedPort);
+                infoMessage = 0;
+
+                // tryto connect to selected port
+                Communication::connect();
+
+                // std::string content = "connected to " + ;
+                Console::addMessage("[INFO] connecting to " + Communication::getPorts()[Communication::getSelectedPort()].port + "...");
+            };
+            ImGui::PopStyleColor(3);
+        };
+
+        // ports info message
+        ImGui::SameLine();
+        switch (infoMessage) {
+            case 0:
+                ImGui::Text("");
+                break;
+            case 1:
+                if (Communication::getPorts().size() > 0) {
+                    std::string ports_found = std::to_string(Communication::getPorts().size()) + " ports found.";
+                    ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), ports_found.c_str());
+                } else {
+                    ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "no port found.");
+                }
+                break;
+            case 2:
+                if (!Communication::getConnectedStatus()) {
+                    std::string connecting_info = "connecting to " + Communication::getPorts()[Communication::getSelectedPort()].port + " ...";
+                    ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), connecting_info.c_str());
+                    infoMessage = 2;
+                } else {
+                    ImGui::Text("");
+                }
+                break;
+            default:
+                ImGui::Text("");
+                break;
+        };
+    } else {
+        ImGui::Text("Commands: ");
+
+        // disconnect button
+        ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.6f, 0.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.5f, 0.0f, 0.0f, 1.0f));
+        ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.4f, 0.1f, 0.0f, 1.0f));
+        if (ImGui::Button("Disconnect")) {
+            Communication::disconnect();
+        };
+        ImGui::PopStyleColor(3);
+        ImGui::SameLine();
+
+        // ping button
+        if (ImGui::Button("Ping Request")) {
+
+        };
+    };
+
+    // handle the console
+    Console::render();
+
+    // end of serial connection child
+    ImGui::EndChild();
+    //--------------------------------------------------------------------------
+
+
+    //--------------------------------------------------------------------------
+    // igniter manager panel
+    // ImGui::BeginChild("igniter panel", ImVec2(0, 50), true);
+    // ImGui::Text("ignitter panel");
+    //
+    // ImGui::EndChild();
+    //--------------------------------------------------------------------------
+
 
     ImGui::End();
-}
+};
 
 void Windows::rightPanel() {
-    ImGui::SetNextWindowPos(ImVec2(io->DisplaySize.x / 2 + 5, 0.0f), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(io->DisplaySize.x / 2 - 5, io->DisplaySize.y));
+    ImGui::SetNextWindowPos(ImVec2(io->DisplaySize.x / 2 + 2, 0.0f), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImVec2(io->DisplaySize.x / 2 - 2, io->DisplaySize.y));
     ImGui::Begin("rightPanel", NULL, ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoNav);
 
-    ImGui::Text("test");
+    //--------------------------------------------------------------------------
+    // tabs
+    ImGuiTabBarFlags tab_bar_flags = ImGuiTabBarFlags_None;
+    if (ImGui::BeginTabBar("properties tabs", tab_bar_flags)) {
+        if (ImGui::BeginTabItem("igniter Panel")) {
+
+            ImGui::EndTabItem();
+        };
+
+        if (ImGui::BeginTabItem("Altitude")) {
+
+
+            ImGui::EndTabItem();
+        };
+
+        if (ImGui::BeginTabItem("Acceleration")) {
+
+
+            ImGui::EndTabItem();
+        };
+
+        if (ImGui::BeginTabItem("Rotation")) {
+
+
+            ImGui::EndTabItem();
+        };
+
+        ImGui::EndTabBar();
+    };
+
+    //--------------------------------------------------------------------------
 
     ImGui::End();
-}
+};

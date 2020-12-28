@@ -40,7 +40,7 @@ void GUI::update(float deltaTime) {
 
 
     // for debug
-    Windows::imguiDebug();
+    // Windows::imguiDebug();
     // Windows::overlay(deltaTime);
 
     // Render dear imgui into screen
@@ -55,7 +55,7 @@ bool GUI::isHovered() {
 //------------------------------------------------------------------------------
 void GUI::setTheme() {
     // set font
-    ImFont* font = io->Fonts->AddFontFromFileTTF("data/fonts/Roboto-Regular.ttf", 15.0f);
+    ImFont* font = io->Fonts->AddFontFromFileTTF("data/fonts/Roboto-Regular.ttf", 18.0f);
 
     /*------------------------------------ sizes ------------------------------------*/
     style->WindowPadding = ImVec2(10.0f, 10.0f);
@@ -68,18 +68,18 @@ void GUI::setTheme() {
     style->GrabMinSize = 10.0f;
 
     style->WindowBorderSize = 0.0f;
-    style->ChildBorderSize = 0.0f;
+    style->ChildBorderSize = 0.2f;
     style->PopupBorderSize = 0.0f;
     style->FrameBorderSize = 0.0f;
     style->TabBorderSize = 0.0f;
 
     style->WindowRounding = 0.0f;
     style->ChildRounding = 0.0f;
-    style->FrameRounding = 5.0f;
+    style->FrameRounding = 0.0f;
     style->PopupRounding = 5.0f;
     style->ScrollbarRounding = 0.0f;
     style->GrabRounding = 0.0f;
-    style->TabRounding = 4.0f;
+    style->TabRounding = 0.0f;
 
     style->WindowTitleAlign = ImVec2(0.5f, 0.5f);
     style->ButtonTextAlign = ImVec2(0.5f, 0.5f);
@@ -91,10 +91,10 @@ void GUI::setTheme() {
     #define MED(v)  ImVec4(0.455f, 0.198f, 0.301f, v)
     #define LOW(v)  ImVec4(0.232f, 0.201f, 0.271f, v)
     #define BG(v)   ImVec4(0.200f, 0.220f, 0.270f, v)
-    #define TEXT(v) ImVec4(0.860f, 0.930f, 0.890f, v)
+    #define TEXT_COLOR(v) ImVec4(0.860f, 0.930f, 0.890f, v)
 
-    style->Colors[ImGuiCol_Text]                  = TEXT(0.78f);
-    style->Colors[ImGuiCol_TextDisabled]          = TEXT(0.28f);
+    style->Colors[ImGuiCol_Text]                  = TEXT_COLOR(0.78f);
+    style->Colors[ImGuiCol_TextDisabled]          = TEXT_COLOR(0.28f);
     style->Colors[ImGuiCol_WindowBg]              = ImVec4(0.13f, 0.14f, 0.17f, 1.00f);
     style->Colors[ImGuiCol_ChildWindowBg]         = BG( 0.58f);
     style->Colors[ImGuiCol_PopupBg]               = BG( 0.9f);
@@ -120,15 +120,19 @@ void GUI::setTheme() {
     style->Colors[ImGuiCol_Header]                = MED( 0.76f);
     style->Colors[ImGuiCol_HeaderHovered]         = MED( 0.86f);
     style->Colors[ImGuiCol_HeaderActive]          = HI( 1.00f);
-    style->Colors[ImGuiCol_Separator]             = TEXT(0.8f);
+    style->Colors[ImGuiCol_Separator]             = TEXT_COLOR(0.8f);
     style->Colors[ImGuiCol_SeparatorHovered]      = MED( 0.78f);
     style->Colors[ImGuiCol_SeparatorActive]       = MED( 1.00f);
     style->Colors[ImGuiCol_ResizeGrip]            = ImVec4(0.47f, 0.77f, 0.83f, 0.04f);
     style->Colors[ImGuiCol_ResizeGripHovered]     = MED( 0.78f);
     style->Colors[ImGuiCol_ResizeGripActive]      = MED( 1.00f);
-    style->Colors[ImGuiCol_PlotLines]             = TEXT(0.63f);
+    style->Colors[ImGuiCol_PlotLines]             = TEXT_COLOR(0.63f);
     style->Colors[ImGuiCol_PlotLinesHovered]      = MED( 1.00f);
-    style->Colors[ImGuiCol_PlotHistogram]         = TEXT(0.63f);
+    style->Colors[ImGuiCol_PlotHistogram]         = TEXT_COLOR(0.63f);
     style->Colors[ImGuiCol_PlotHistogramHovered]  = MED( 1.00f);
     style->Colors[ImGuiCol_TextSelectedBg]        = MED( 0.43f);
+
+    style->Colors[ImGuiCol_Tab]                   = ImVec4(0.46f, 0.20f, 0.30f, 0.78f);
+    style->Colors[ImGuiCol_TabHovered]            = ImVec4(0.59f, 0.10f, 0.30f, 1.00f);
+    style->Colors[ImGuiCol_TabActive]             = ImVec4(0.56f, 0.15f, 0.33f, 1.00f);
 };

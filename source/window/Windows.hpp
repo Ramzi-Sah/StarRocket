@@ -6,6 +6,7 @@
 #include <imgui_impl_opengl3.h>
 
 #include "../config.hpp"
+#include "../serial/Communication.hpp"
 
 class Windows {
 private:
